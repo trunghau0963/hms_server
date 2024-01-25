@@ -1,0 +1,206 @@
+
+### test
+GET http://localhost:5000/auth/profile
+Content-Type: application/json
+
+### test
+GET http://localhost:5000/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkdHF1dCIsInVzZXJuYW1lIjoiam9obl9kb2UiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MDUzMTQ1MzcsImV4cCI6MTcwNTkxOTMzN30.WasmyfpvgnDc3GQZR4r3FngXXuXOKrmMJ-bSO_lXMZE
+
+
+### restApi
+
+POST http://localhost:5000/auth/signup 
+Content-Type: application/json
+
+{
+  "email": "Admin123@gmail.com",
+  "phoneNumber": "0133456789",
+  "password": "Admin123",
+  "userName": "Admin123",
+  "role": "Admin"
+}
+
+###
+
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+  "phoneNumber": "0585830963",
+  "password": "Ntth0963",
+  "role": "Admin"
+}
+
+
+### 
+GET http://localhost:5000/auth/role
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1MWt5Zm4iLCJ1c2VybmFtZSI6ImpvaG5fZG9lIiwicm9sZSI6IkRlbnRpc3QiLCJpYXQiOjE3MDUzMTYxOTMsImV4cCI6MTcwNTkyMDk5M30.QG3OAA8pXIItsKykhYbko9hGaPHFPigSKVh06Yc-Wqk"
+}
+
+
+
+### Patient
+GET http://localhost:5000/patient
+
+
+
+###
+GET http://localhost:5000/patient/all-name
+
+###
+GET http://localhost:5000/patient/7i8cjp
+
+
+###
+PUT http://localhost:5000/admin/changestatus/B10D10
+Content-Type: application/json
+
+{
+  "role": "Drug"
+}
+
+
+###
+GET http://localhost:5000/patient/schedule-dentist/d47uvn
+
+
+###
+GET http://localhost:5000/patient/nameall
+
+
+
+### Dentist
+GET http://localhost:5000/dentist
+
+###
+GET http://localhost:5000/dentist/llffdwqdqdqe
+
+
+### 
+POST http://localhost:5000/dentist/schedule/d47uvn
+Content-Type: application/json
+
+{
+  "date": "2024-01-16T00:00:00Z",
+  "time": "2024-01-16T11:00:00Z"
+}
+
+### 
+DELETE http://localhost:5000/dentist/schedule/d47uvn/delete
+Content-Type: application/json
+
+{
+  "date": "2024-01-20T00:00:00Z",
+  "time": "2024-01-20T10:00:00Z"
+}
+
+
+###
+POST http://localhost:5000/dentist/add-appointment
+Content-Type: application/json
+
+{
+  "idPatient": "78409",
+  "idDentist": "d47uvn",
+  "date": "2024-01-16T00:00:00.000Z",
+  "time": "2024-01-16T11:00:00.000Z"
+}
+
+###
+
+
+DELETE http://localhost:5000/dentist/appointment/d47uvn/delete
+Content-Type: application/json
+
+{
+  "idPatient": "78409",
+  "idDentist": "d47uvn",
+  "date": "2024-01-16T00:00:00.000Z",
+  "time": "2024-01-16T11:00:00.000Z"
+}
+
+###
+POST http://localhost:5000/dentist/add-record
+Content-Type: application/json
+
+{
+  "idPatient": "1e41m4",
+  "idDentist": "32zzbq",
+  "date": "2024-02-02T00:00:00.000Z",
+  "time": "2024-02-02T00:00:00.000Z",
+  "diagnose": "test diagnose",
+  "symptom": "test symptom"
+}
+
+###
+POST http://localhost:5000/dentist/add-precription
+Content-Type: application/json
+
+{
+  "idRecord": "clroqvryv00003jqeaya3auo5",
+  "drugName": "Paracetamol",
+  "quantity": 10,
+  "description": "3 lan 1 ngay"
+}
+
+
+###
+POST http://localhost:5000/dentist/add-service-indicator
+Content-Type: application/json
+
+{
+  "idRecord": "clronfcop0000dgwzi86rc2ry",
+  "serviceName": "Consultation",
+  "quantity": 1,
+}
+
+###
+DELETE http://localhost:5000/dentist/appointment/d47uvn/delete
+Content-Type: application/json
+
+{
+  "idPatient": "78409",
+  "idDentist": "d47uvn",
+  "date": "2024-01-16T00:00:00.000Z",
+  "time": "2024-01-16T11:00:00.000Z"
+}
+
+###
+GET http://localhost:5000/dentist/record/32zzbq
+
+### 
+GET http://localhost:5000/dentist/appointment/32zzbq
+
+### 
+GET http://localhost:5000/dentist/schedule/32zzbq
+
+### 
+GET http://localhost:5000/dentist/record/precription/clroqvryv00003jqeaya3auo5
+
+### 
+GET http://localhost:5000/dentist/record/service-indicator/clronfcop0000dgwzi86rc2ry
+
+
+
+### Staff
+GET http://localhost:5000/staff
+
+###
+GET http://localhost:5000/dentist/z452oo
+
+
+### Drug 
+GET http://localhost:5000/drug
+
+### 
+GET http://localhost:5000/drug/available
+
+### 
+GET http://localhost:5000/drug/unavailable
+
+###
+GET http://localhost:5000/drug/B10D10

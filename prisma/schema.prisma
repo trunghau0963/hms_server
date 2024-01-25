@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String @id @default(cuid())
+  email       String
+  phoneNumber String
+  password    String
+  role        String
+  userName    String
+}
+
+model Patient {
+  id           String        @id @default(cuid())
+  email        String?       @unique
+  phoneNumber  String        @unique
+  password     String?
+  userName     String
+  dob          DateTime?
+  userAddress  String?
+  islock       Boolean       @default(false)
+  refreshToken String?
+  Appointment  Appointment[]
+  Record       Record[]
+}
+
+model Staff {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  phoneNumber  String    @unique
+  password     String
+  userName     String
+  dob          DateTime?
+  userAddress  String?
+  islock       Boolean   @default(false)
+  refreshToken String?
+}
+
+model UserAdmin {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  phoneNumber  String    @unique
+  password     String
+  dob          DateTime?
+  userAddress  String?
+  userName     String
+  refreshToken String?
+}
+
+model Dentist {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  phoneNumber  String        @unique
+  password     String
+  userName     String
+  dob          DateTime?
+  userAddress  String?
+  islock       Boolean       @default(false)
+  refreshToken String?
+  Appointment  Appointment[]
+  Schedule     Schedule[]
+  Record       Record[]
+}
+
+model Appointment {
+  idPatient         String
+  idDentist         String
+  dateOfAppointment DateTime
+  timeOfAppointment DateTime
+  patient           Patient  @relation(fields: [idPatient], references: [id])
+  dentist           Dentist  @relation(fields: [idDentist], references: [id])
+
+  @@id([idDentist, dateOfAppointment, timeOfAppointment])
+}
+
+model Schedule {
+  idDentist         String
+  dateOfAppointment DateTime
+  timeOfAppointment DateTime
+  dentist           Dentist  @relation(fields: [idDentist], references: [id])
+
+  @@id([idDentist, dateOfAppointment, timeOfAppointment])
+}
+
+model Record {
+  id                String             @id @default(cuid())
+  idPatient         String
+  idDentist         String
+  dateOfAppointment DateTime
+  timeOfAppointment DateTime
+  total             Int                @default(0)
+  diagnose          String
+  symptom           String
+  patient           Patient            @relation(fields: [idPatient], references: [id])
+  dentist           Dentist            @relation(fields: [idDentist], references: [id])
+  Prescription      Prescription[]
+  ServiceIndicator  ServiceIndicator[]
+}
+
+model Prescription {
+  idRecord    String
+  idBatch     String @unique
+  idDrug      String @unique
+  quantity    Int
+  description String
+  total       Int
+  record      Record @relation(fields: [idRecord], references: [id])
+  drug        Drug   @relation(fields: [idBatch, idDrug], references: [idBatch, idDrug])
+
+  @@id([idRecord, idBatch, idDrug])
+}
+
+model ServiceIndicator {
+  idRecord  String
+  idService String
+  quantity  Int     @default(0)
+  total     Int
+  record    Record  @relation(fields: [idRecord], references: [id])
+  service   Service @relation(fields: [idService], references: [id])
+
+  @@id([idRecord, idService])
+}
+
+model Service {
+  id               String             @id @default(cuid())
+  serviceName      String
+  price            Int
+  isDelete         Boolean            @default(false)
+  ServiceIndicator ServiceIndicator[]
+}
+
+model Drug {
+  idBatch      String         @id @default(cuid())
+  idDrug       String         @default(cuid())
+  drugName     String
+  unit         String
+  indicator    String
+  quantity     Int
+  expireDate   DateTime
+  price        Int
+  isDelete     Boolean        @default(false)
+  Prescription Prescription[]
+
+  @@unique([idBatch, idDrug])
+}
