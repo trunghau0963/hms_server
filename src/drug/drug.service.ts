@@ -41,13 +41,46 @@ export class DrugService {
         return response;
     }
 
-    async deleteDrug(id: string): Promise<Drug> {
+    async addDrug(data: any): Promise<Drug> {
+        const response = this.prismaService.drug.create({
+            data: {
+                idBatch: data.idBatch,
+                idDrug: data.idDrug,
+                drugName: data.drugName,
+                unit: data.unit,
+                indicator: data.indicator,
+                quantity: data.quantity,
+                expireDate: data.expireDate,
+                price: data.price,
+                isDelete: false
+            }
+        });
+        return response;
+    }
+
+    async updateDrug(id: string): Promise<Drug> {
+
+        const drug = await this.prismaService.drug.findUnique({
+            where: {
+                idBatch: id
+            }
+        });
+
         const response = this.prismaService.drug.update({
             where: {
                 idBatch: id
             },
             data: {
-                isDelete: true
+                isDelete: !drug.isDelete
+            }
+        });
+        return response;
+    }
+
+    async deleteDrug(id: string): Promise<Drug> {
+        const response = this.prismaService.drug.delete({
+            where: {
+                idBatch: id
             }
         });
         return response;

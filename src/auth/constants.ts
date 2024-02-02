@@ -1,6 +1,7 @@
-import { randomBytes } from 'crypto';
-const secret = randomBytes(32).toString('hex');
+import { randomBytes } from "crypto";
+const secret = randomBytes(32).toString("hex");
 
 export const jwtConstants = {
-    secret: secret,
+  access: "ACCESS_TOKEN_KEY",
+  refresh: "REFRESH_TOKEN_KEY",
 };

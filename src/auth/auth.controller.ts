@@ -3,79 +3,101 @@ import {
   Controller,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
   Post,
   Request,
   UseGuards
-} from '@nestjs/common';
-import { AuthGuard } from './auth.guard';
+} from "@nestjs/common";
 import {
-  ApiBody, ApiBearerAuth,
+  ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
-} from '@nestjs/swagger';
-import { AuthGuard as AuthGuardPassport } from '@nestjs/passport';
-import { AuthService } from './auth.service';
-import { SetMetadata } from '@nestjs/common';
-export const IS_PUBLIC_KEY = 'isPublic';
-export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
-import { User } from '@prisma/client';
-import { loginDtoByPhone, registerDto } from './dtos/auth.dtos';
-import { ValidationPipe } from 'src/validation.pipe';
-import { Auth } from './entities/auth.entity';
+} from "@nestjs/swagger";
+import { User } from "@prisma/client";
+import { Public } from "src/public.decorator";
+import { ValidationPipe } from "src/validation.pipe";
+import { AuthService } from "./auth.service";
+import {
+  LoginDtoByPhone,
+  RefreshTokenDto,
+  RegisterDto,
+} from "./dtos/auth.dtos";
+import { Auth } from "./entities/auth.entity";
+import { AuthGuard } from "./guards/auth.guard";
 
-
-@ApiBearerAuth()
-@ApiTags('Auth')
-@Controller('auth')
+@ApiTags("Auth")
+@Controller("auth")
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @Public()
-  @Post('signup')
+  @Post("signup")
+  @ApiBody({ type: RegisterDto })
+  @ApiOperation({ summary: "Sign up User" })
+  @ApiResponse({
+    status: 200,
+    description: "User successfully registered",
+    type: RegisterDto,
+  })
+  @ApiResponse({
+    status: 201,
+    description: "User successfully registered and Response headers",
+  })
+  @ApiResponse({ status: 400, description: "Bad request" })
   @HttpCode(HttpStatus.CREATED)
-  async signUp(@Body() signUpDto: registerDto): Promise<User> {
-    console.log('sign up')
-    try {
-      return await this.authService.signUp(signUpDto);
-    } catch (error) {
-      console.error('Error during sign-up:', error);
-      throw new HttpException({ message: 'Sign-up failed', error }, 400);
-    }
+  async signUp(@Body() signUpDto: RegisterDto): Promise<User> {
+    console.log("sign up");
+    return await this.authService.signUp(signUpDto);
   }
 
   @Public()
-  @ApiBody({ type: loginDtoByPhone })
-  @Post('login')
-  @ApiOperation({ summary: 'Sign in User' })
+  @Post("login")
+  @ApiBody({ type: LoginDtoByPhone })
+  @ApiOperation({ summary: "Sign in User" })
+  @ApiResponse({
+    status: 200,
+    description: "User successfully logged in",
+    type: Auth,
+  })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 404, description: "Not Found" })
+  @ApiResponse({ status: 400, description: "Bad request" })
   @HttpCode(HttpStatus.OK)
-  async signIn(@Body(new ValidationPipe) signInDto: loginDtoByPhone): Promise<any> {
+  async signIn(
+    @Body(new ValidationPipe()) signInDto: LoginDtoByPhone,
+  ): Promise<any> {
     return this.authService.signIn(signInDto);
   }
 
-  @UseGuards(AuthGuardPassport('jwt'))
-  @Post('logout')
-  async logout(@Request() req) {
-    await this.authService.logout(req.user);
-  }
-
   @UseGuards(AuthGuard)
-  @Get('profile')
+  @Get("profile")
+  @ApiOperation({ summary: "Get profile User" })
+  @ApiBearerAuth("JWT-auth")
+  @ApiResponse({
+    status: 200,
+    description: "Get profile User",
+    type: Auth,
+  })
+  @ApiResponse({ status: 400, description: "Bad request" })
   getProfile(@Request() req) {
     return req.user;
   }
 
   @Public()
-  @Get()
-  findAll() {
-    return [];
-  }
-
-  @Public()
-  @Get('role')
-  async getRole(token: string): Promise<string> {
-    return this.authService.getRole(token);
+  @Post("refresh")
+  @ApiOperation({ summary: "Refresh token" })
+  @ApiBody({ type: RefreshTokenDto })
+  @ApiResponse({
+    status: 200,
+    description: "Refresh token",
+    type: Auth,
+  })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 400, description: "Bad request" })
+  @HttpCode(HttpStatus.OK)
+  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<any> {
+    return this.authService.refreshToken(refreshTokenDto);
   }
 }

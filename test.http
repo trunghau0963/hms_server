@@ -5,8 +5,7 @@ Content-Type: application/json
 
 ### test
 GET http://localhost:5000/auth/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkdHF1dCIsInVzZXJuYW1lIjoiam9obl9kb2UiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE3MDUzMTQ1MzcsImV4cCI6MTcwNTkxOTMzN30.WasmyfpvgnDc3GQZR4r3FngXXuXOKrmMJ-bSO_lXMZE
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ODRrYXAiLCJ1c2VybmFtZSI6IkFkbWluMTIzIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzA2ODEwNTY5LCJleHAiOjE3MDY4MTA2Mjl9.KZX52P_82XoUPxqA3dxrJhbv1J8crnQWbcRZ1dkMYlw
 
 ### restApi
 
@@ -90,6 +89,16 @@ Content-Type: application/json
 }
 
 ### 
+POST http://localhost:5000/schedule/add
+Content-Type: application/json
+
+{
+  "id": "32zzbq",
+  "date": "2024-02-17T00:00:00Z",
+  "time": "2024-02-17T11:00:00Z"
+}
+
+### 
 DELETE http://localhost:5000/dentist/schedule/d47uvn/delete
 Content-Type: application/json
 
@@ -106,6 +115,19 @@ Content-Type: application/json
 {
   "idPatient": "78409",
   "idDentist": "d47uvn",
+  "date": "2024-01-16T00:00:00.000Z",
+  "time": "2024-01-16T11:00:00.000Z"
+}
+
+
+
+###
+POST http://localhost:5000/appointment/add
+Content-Type: application/json
+
+{
+  "idPatient": "1e41m4",
+  "idDentist": "32zzbq",
   "date": "2024-01-16T00:00:00.000Z",
   "time": "2024-01-16T11:00:00.000Z"
 }
@@ -184,6 +206,9 @@ GET http://localhost:5000/dentist/record/precription/clroqvryv00003jqeaya3auo5
 ### 
 GET http://localhost:5000/dentist/record/service-indicator/clronfcop0000dgwzi86rc2ry
 
+### 
+GET http://localhost:5000/schedule/32zzbq
+
 
 
 ### Staff
@@ -194,7 +219,7 @@ GET http://localhost:5000/dentist/z452oo
 
 
 ### Drug 
-GET http://localhost:5000/drug
+GET http://localhost:5000/user/patient
 
 ### 
 GET http://localhost:5000/drug/available
@@ -204,3 +229,6 @@ GET http://localhost:5000/drug/unavailable
 
 ###
 GET http://localhost:5000/drug/B10D10
+
+###
+DELETE http://localhost:5000/drug/Batch_1
