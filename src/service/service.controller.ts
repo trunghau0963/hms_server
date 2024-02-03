@@ -3,6 +3,8 @@ import { ServiceService } from './service.service';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AddServiceDto, ServiceDto } from './dtos/service.dtos';
 import { Public } from 'src/public.decorator';
+import { Roles } from 'src/roles.decoration';
+import { Role } from 'src/auth/enum';
 
 
 @ApiTags('Service')
@@ -31,34 +33,40 @@ export class ServiceController {
         return this.serviceService.getServiceById(req.params.id);
     }
 
-    @Public()
+    @Roles(Role.Admin, Role.Staff)
     @Post('add')
     @ApiBody({ type: AddServiceDto })
     @ApiOperation({ summary: 'Add service' })
     @ApiResponse({ status: 200, description: 'Add service', type: ServiceDto })
     @ApiResponse({ status: 400, description: 'Bad request' })
+    @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+    @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     @HttpCode(HttpStatus.OK)
     async addService(@Body() data: any): Promise<any> {
         return this.serviceService.addService(data);
     }
 
-    @Public()
+    @Roles(Role.Admin, Role.Staff)
     @Delete('delete')
     @ApiBody({ type: ServiceDto })
     @ApiOperation({ summary: 'Delete service' })
     @ApiResponse({ status: 200, description: 'Delete service', type: ServiceDto })
     @ApiResponse({ status: 400, description: 'Bad request' })
+    @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+    @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     @HttpCode(HttpStatus.OK)
     async deleteService(@Body() data: any): Promise<any> {
         return this.serviceService.deleteService(data);
     }
 
-    @Public()
+    @Roles(Role.Admin, Role.Staff)
     @Put('update')
     @ApiBody({ type: ServiceDto })
     @ApiOperation({ summary: 'Update service' })
     @ApiResponse({ status: 200, description: 'Update service', type: ServiceDto })
     @ApiResponse({ status: 400, description: 'Bad request' })
+    @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+    @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     @HttpCode(HttpStatus.OK)
     async updateService(@Body() data: any): Promise<any> {
         return this.serviceService.updateService(data);

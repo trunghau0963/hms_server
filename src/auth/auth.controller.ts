@@ -26,6 +26,8 @@ import {
 } from "./dtos/auth.dtos";
 import { Auth } from "./entities/auth.entity";
 import { AuthGuard } from "./guards/auth.guard";
+import { Role } from "./enum";
+import { Roles } from "src/roles.decoration";
 
 @ApiTags("Auth")
 @Controller("auth")
@@ -71,6 +73,7 @@ export class AuthController {
     return this.authService.signIn(signInDto);
   }
 
+  // @Roles(Role.Admin, Role.Staff, Role.Dentist, Role.Patient)
   @UseGuards(AuthGuard)
   @Get("profile")
   @ApiOperation({ summary: "Get profile User" })

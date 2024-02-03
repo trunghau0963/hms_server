@@ -6,6 +6,8 @@ import { AppointmentService } from './appointment.service';
 import { AddAppointmentDto, AppointmentDto, DeleteAppointmentDto } from './dtos/appointment.dtos';
 import { AppointmentEntity } from './entities/appointment.entity';
 import { Public } from 'src/public.decorator';
+import { Role } from 'src/auth/enum';
+import { Roles } from 'src/roles.decoration';
 
 @ApiTags('Appointment')
 @Controller('appointment')
@@ -44,7 +46,7 @@ export class AppointmentController {
         return this.appointmentService.addAppointment(data);
     }
 
-    @Public()
+    @Roles(Role.Dentist)
     @ApiBody({ type: AppointmentDto })
     @ApiOperation({ summary: 'Delete appointment' })
     @ApiResponse({ status: 200, description: 'Delete appointment', type: DeleteAppointmentDto })

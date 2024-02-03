@@ -25,7 +25,7 @@ import { NormalUserEntity } from "./entities/user.entity";
 import { Public } from "src/public.decorator";
 import { ACGuard, UseRoles } from "nest-access-control";
 import { Role } from "src/auth/enum";
-import { Roles } from "src/roles.decorator";
+import { Roles } from "src/roles.decoration";
 
 @ApiTags("User")
 @Controller("user")
@@ -34,8 +34,8 @@ export class UserController {
 
   // @ApiBearerAuth()
   // @UseGuards(AuthGuard("jwt"))
-  @Roles(Role.Admin)
-  @Public()
+
+  @Roles(Role.Admin, Role.Staff, Role.Dentist)
   @Get("patient")
   @ApiOperation({ summary: "Get all patient" })
   @ApiResponse({
@@ -43,13 +43,15 @@ export class UserController {
     description: "Get patient",
     type: NormalUserEntity,
   })
-  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+  @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
+  @ApiResponse({ status: 404, description: "Not Found" })
   @HttpCode(HttpStatus.OK)
   async getAllPatient(@Req() req: any): Promise<Patient[]> {
     return this.userService.getAllPatient();
   }
 
-  @Public()
+  @Roles(Role.Admin, Role.Staff, Role.Dentist)
   @Get("patient/all-name")
   @ApiOperation({ summary: "Get all name patient" })
   @ApiResponse({
@@ -57,13 +59,15 @@ export class UserController {
     description: "Get all name patient",
     type: String,
   })
-  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+  @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
+  @ApiResponse({ status: 404, description: "Not Found" })
   @HttpCode(HttpStatus.OK)
   async getNameAllPatient(@Req() req: any): Promise<string[]> {
     return this.userService.getNameAllPatient();
   }
 
-  @Public()
+  @Roles(Role.Admin, Role.Staff, Role.Dentist, Role.Patient)
   @Get("patient/:id")
   @ApiParam({ name: "id", required: true, type: String, example: "1e41m4" })
   @ApiOperation({ summary: "Get patient by id" })
@@ -72,7 +76,9 @@ export class UserController {
     description: "Get patient by id",
     type: NormalUserEntity,
   })
-  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+  @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
+  @ApiResponse({ status: 404, description: "Not Found" })
   @HttpCode(HttpStatus.OK)
   async getPatientById(@Req() req: any): Promise<Patient> {
     return this.userService.getPatientById(req.params.id);
@@ -108,7 +114,7 @@ export class UserController {
     return this.userService.getDentistById(req.params.id);
   }
 
-  @Public()
+  @Roles(Role.Admin)
   @Get("staff")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: "Get staff" })
@@ -117,12 +123,14 @@ export class UserController {
     description: "Get staff",
     type: NormalUserEntity,
   })
-  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+  @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
+  @ApiResponse({ status: 404, description: "Not Found" })
   async getAllStaff(@Req() req: any): Promise<Staff[]> {
     return this.userService.getAllStaff();
   }
 
-  @Public()
+  @Roles(Role.Admin, Role.Staff)
   @Get("staff/:id")
   @ApiOperation({ summary: "Get all staff" })
   @ApiParam({ name: "id", required: true, type: String, example: "4wyppm" })
@@ -131,13 +139,15 @@ export class UserController {
     description: "Get staff",
     type: NormalUserEntity,
   })
-  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+  @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
+  @ApiResponse({ status: 404, description: "Not Found" })
   @HttpCode(HttpStatus.OK)
   async getStaffById(@Req() req: any): Promise<Staff> {
     return this.userService.getStaffById(req.params.id);
   }
 
-  @Public()
+  @Roles(Role.Admin, Role.Staff)
   @Put("changestatus/:id")
   @ApiParam({ name: "id", required: true, type: String, example: "1e41m4" })
   @ApiBody({ type: ChangeStatus })
@@ -147,7 +157,9 @@ export class UserController {
     description: "Change status user",
     type: NormalUserEntity,
   })
-  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+  @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
+  @ApiResponse({ status: 400, description: "Bad Request" })
   async changStatusUser(
     @Req() req: any,
     @Body() data: ChangeStatus,

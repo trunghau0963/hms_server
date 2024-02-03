@@ -14,6 +14,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
     origin: "http://localhost:3000",
+    credentials: true,
   });
   app.use(express.static("."));
 
@@ -33,7 +34,7 @@ async function bootstrap() {
       },
       "JWT-auth", // This name should be the same as the security name in the controller
     )
-    .addSecurityRequirements('JWT-auth')
+    .addSecurityRequirements("JWT-auth")
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document, {

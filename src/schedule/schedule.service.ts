@@ -11,6 +11,11 @@ export class ScheduleService {
         // private jwtService: JwtService
     ) { }
 
+    async getAllSchedule(): Promise<Schedule[]> {
+        const response = this.prismaService.schedule.findMany();
+        return response;
+    }
+
     async getScheduleById(id: string): Promise<Schedule[]> {
         const response = this.prismaService.schedule.findMany({
             where: {

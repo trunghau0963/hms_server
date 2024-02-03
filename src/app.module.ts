@@ -13,6 +13,7 @@ import { UserModule } from "./user/user.module";
 import { AccessControlModule, ACGuard } from "nest-access-control";
 import { APP_GUARD } from "@nestjs/core";
 import { RBAC_POLICY } from "./auth/rbac-policy";
+import { RolesGuard } from "./auth/guards/roles.guard";
 
 @Module({
   imports: [
@@ -34,10 +35,14 @@ import { RBAC_POLICY } from "./auth/rbac-policy";
   providers: [
     AppService,
     JwtStrategy,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ACGuard,
+    // },
     {
       provide: APP_GUARD,
-      useClass: ACGuard,
-    },
+      useClass: RolesGuard,
+    }
   ],
 })
 export class AppModule {}

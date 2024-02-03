@@ -6,6 +6,8 @@ import { ScheduleDto } from './dtos/schedule.dtos';
 import { ScheduleService } from './schedule.service';
 import { ScheduleEntity } from './entities/schedule.entity';
 import { Public } from 'src/public.decorator';
+import { Roles } from 'src/roles.decoration';
+import { Role } from 'src/auth/enum';
 
 
 @ApiTags('Schedule')
@@ -13,6 +15,15 @@ import { Public } from 'src/public.decorator';
 export class ScheduleController {
     constructor(private scheduleService: ScheduleService) { }
 
+    @Public()
+    @Get()
+    @ApiOperation({ summary: 'Get all schedule' })
+    @ApiResponse({ status: 200, description: 'Get all schedule', type: [ScheduleEntity] })
+    @ApiResponse({ status: 400, description: 'Bad request' })
+    @HttpCode(HttpStatus.OK)
+    async getAllSchedule(): Promise<Schedule[]> {
+        return this.scheduleService.getAllSchedule();
+    }
 
     @Public()
     @Get(':id')
@@ -24,23 +35,27 @@ export class ScheduleController {
         return this.scheduleService.getScheduleById(req.params.id);
     }
 
-    @Public()
+    @Roles(Role.Dentist)
     @Post('add')
     @ApiBody({ type: ScheduleDto })
     @ApiOperation({ summary: 'Add schedule' })
     @ApiResponse({ status: 200, description: 'Add schedule', type: ScheduleDto })
     @ApiResponse({ status: 400, description: 'Bad request' })
+    @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+    @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     @HttpCode(HttpStatus.OK)
     async addSchedule(@Body() data: ScheduleDto): Promise<Schedule> {
         return this.scheduleService.addSchedule(data);
     }
 
-    @Public()
+    @Roles(Role.Dentist)
     @Delete('delete')
     @ApiBody({ type: ScheduleDto })
     @ApiOperation({ summary: 'Delete schedule' })
     @ApiResponse({ status: 200, description: 'Delete schedule', type: ScheduleDto })
     @ApiResponse({ status: 400, description: 'Bad request' })
+    @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+    @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     async deleteSchedule(@Body() data: ScheduleDto): Promise<Schedule> {
         return this.scheduleService.deleteSchedule(data);
     }
