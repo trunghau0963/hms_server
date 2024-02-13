@@ -4,7 +4,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Appointment, Dentist, Patient, Prescription, Record, Schedule, ServiceIndicator } from '@prisma/client';
 import { RecordService } from './record.service';
 import { PrescriptionEntity, RecordEntity, ServiceIndicatorEntity } from './entities/record.entities';
-import { AddRecordDto, DeleteDrugPrecription, PrescriptionDto, ServiceIndicatorDto, UpdateRecordDto } from './dtos/record.dtos';
+import { AddRecordDto, DeleteDrugPrescription, PrescriptionDto, ServiceIndicatorDto, UpdateRecordDto } from './dtos/record.dtos';
 import { Public } from 'src/public.decorator';
 import { Role } from 'src/auth/enum';
 import { Roles } from 'src/roles.decoration';
@@ -53,14 +53,14 @@ export class RecordController {
 
     @ApiBearerAuth('JWT-auth')
     @Roles(Role.Dentist)
-    @Get('precription/:id')
+    @Get('prescription/:id')
     @ApiParam({ name: 'id', required: true, type: String, example: 'cls1kwo060000ba6n2cwkzx00' })
-    @ApiOperation({ summary: 'Get precription by id' })
-    @ApiResponse({ status: 200, description: 'Get precription by id', type: PrescriptionEntity })
+    @ApiOperation({ summary: 'Get prescription by id' })
+    @ApiResponse({ status: 200, description: 'Get prescription by id', type: PrescriptionEntity })
     @ApiResponse({ status: 404, description: 'Not Found' })
     @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
-    async getPrecriptionById(@Req() req: any): Promise<Prescription[]> {
-        return this.recordService.getPrecriptionById(req.params.id);
+    async getPrescriptionById(@Req() req: any): Promise<Prescription[]> {
+        return this.recordService.getPrescriptionById(req.params.id);
     }
 
     @ApiBearerAuth('JWT-auth')
@@ -92,16 +92,16 @@ export class RecordController {
 
     @ApiBearerAuth('JWT-auth')
     @Roles(Role.Dentist)
-    @Post('add-precription')
+    @Post('add-prescription')
     @ApiBody({ type: PrescriptionDto })
-    @ApiOperation({ summary: 'Add precription' })
-    @ApiResponse({ status: 200, description: 'Add precription', type: RecordEntity })
+    @ApiOperation({ summary: 'Add prescription' })
+    @ApiResponse({ status: 200, description: 'Add prescription', type: RecordEntity })
     @ApiResponse({ status: 400, description: 'Bad request' })
     @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
     @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     @HttpCode(HttpStatus.OK)
-    async addPrecription(@Req() req: any, @Body() data: any): Promise<any> {
-        return this.recordService.addPrecription(data);
+    async addPrescription(@Req() req: any, @Body() data: any): Promise<any> {
+        return this.recordService.addPrescription(data);
     }
 
     @ApiBearerAuth('JWT-auth')
@@ -121,49 +121,50 @@ export class RecordController {
 
     @ApiBearerAuth('JWT-auth')
     @Roles(Role.Dentist, Role.Staff, Role.Admin)
-    @Delete('delete')
-    @ApiBody({ type: RecordEntity })
+    @Delete('delete/:id')
+    // @ApiBody({ type: RecordEntity })
+    @ApiParam({ name: 'id', required: true, type: String, example: 'cls1kwo060000ba6n2cwkzx00' })
     @ApiOperation({ summary: 'Delete record' })
     @ApiResponse({ status: 200, description: 'Delete record', type: RecordEntity })
     @ApiResponse({ status: 400, description: 'Bad request' })
     @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
     @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     @HttpCode(HttpStatus.OK)
-    async deleteRecord(@Req() req: any, @Body() data: any): Promise<any> {
-        return this.recordService.deleteRecord(data);
+    async deleteRecord(@Req() req: any): Promise<any> {
+        return this.recordService.deleteRecord(req.params.id);
     }
 
     @ApiBearerAuth('JWT-auth')
     @Roles(Role.Dentist)
-    @Delete('delete-drug/precription')
-    @ApiBody({ type: DeleteDrugPrecription })
-    @ApiOperation({ summary: 'Delete drug precription' })
-    @ApiResponse({ status: 200, description: 'Delete drug precription', type: RecordEntity })
+    @Delete('delete-drug/prescription/:idRecod/:idBatch/:idDrug')
+    @ApiBody({ type: DeleteDrugPrescription })
+    @ApiOperation({ summary: 'Delete drug prescription' })
+    @ApiResponse({ status: 200, description: 'Delete drug prescription', type: RecordEntity })
     @ApiResponse({ status: 404, description: 'Not Found'})
     @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
     @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     @HttpCode(HttpStatus.OK)
-    async deleteDrugPrecription( @Body() data: any): Promise<any> {
-        return this.recordService.deleteDrugPrecription(data);
+    async deleteDrugPrescription(@Req() req: any): Promise<any> {
+        return this.recordService.deleteDrugPrescription(req.params.idRecod, req.params.idBatch, req.params.idDrug);
     }
 
     @ApiBearerAuth('JWT-auth')
     @Roles(Role.Dentist)
-    @Delete('delete-precription')
+    @Delete('delete-prescription')
     @ApiBody({ type: PrescriptionDto })
-    @ApiOperation({ summary: 'Delete all precription' })
-    @ApiResponse({ status: 200, description: 'Delete precription', type: RecordEntity })
+    @ApiOperation({ summary: 'Delete all prescription' })
+    @ApiResponse({ status: 200, description: 'Delete prescription', type: RecordEntity })
     @ApiResponse({ status: 400, description: 'Bad request' })
     @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
     @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     @HttpCode(HttpStatus.OK)
-    async deletePrecription(@Req() req: any, @Body() data: any): Promise<any> {
-        return this.recordService.deletePrecription(data);
+    async deletePrescription(@Req() req: any, @Body() data: any): Promise<any> {
+        return this.recordService.deletePrescription(data);
     }
 
     @ApiBearerAuth('JWT-auth')
     @Roles(Role.Dentist)
-    @Delete('delete-service/service-indicator')
+    @Delete('delete-service/service-indicator/:idRecord/:idService')
     @ApiBody({ type: ServiceIndicatorDto })
     @ApiOperation({ summary: 'Delete service indicator' })
     @ApiResponse({ status: 200, description: 'Delete service indicator', type: RecordEntity })
@@ -171,8 +172,8 @@ export class RecordController {
     @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
     @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
     @HttpCode(HttpStatus.OK)
-    async deleteService(@Req() req: any, @Body() data: any): Promise<any> {
-        return this.recordService.deleteServiceInServiceIndicator(data);
+    async deleteService(@Req() req: any): Promise<any> {
+        return this.recordService.deleteServiceInServiceIndicator(req.params.idRecord, req.params.idService);
     }
 
     @ApiBearerAuth('JWT-auth')

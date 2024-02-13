@@ -27,14 +27,15 @@ import { ACGuard, UseRoles } from "nest-access-control";
 import { Role } from "src/auth/enum";
 import { Roles } from "src/roles.decoration";
 
+
+@ApiBearerAuth()
 @ApiTags("User")
 @Controller("user")
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  // @ApiBearerAuth()
   // @UseGuards(AuthGuard("jwt"))
 
+  
   @Roles(Role.Admin, Role.Staff, Role.Dentist)
   @Get("patient")
   @ApiOperation({ summary: "Get all patient" })
@@ -148,9 +149,9 @@ export class UserController {
   }
 
   @Roles(Role.Admin, Role.Staff)
-  @Put("changestatus/:id")
+  @Put("changestatus/:role/:id")
   @ApiParam({ name: "id", required: true, type: String, example: "1e41m4" })
-  @ApiBody({ type: ChangeStatus })
+  @ApiParam({ name: "role", required: true, type: String, example: "patient" })
   @ApiOperation({ summary: "Change status user" })
   @ApiResponse({
     status: 200,
@@ -162,9 +163,8 @@ export class UserController {
   @ApiResponse({ status: 400, description: "Bad Request" })
   async changStatusUser(
     @Req() req: any,
-    @Body() data: ChangeStatus,
   ): Promise<any> {
     console.log(req.params.id);
-    return this.userService.changStatusUser(req.params.id, data);
+    return this.userService.changStatusUser(req.params.id, req.params.role);
   }
 }

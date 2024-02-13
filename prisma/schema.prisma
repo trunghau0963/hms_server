@@ -149,3 +149,9 @@ model Drug {
 
   @@unique([idBatch, idDrug])
 }
+
+model Invoice {
+  id       String @id @default(cuid())
+  idRecord String
+  total    Int
+}

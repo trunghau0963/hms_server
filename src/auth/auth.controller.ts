@@ -23,6 +23,7 @@ import {
   LoginDtoByPhone,
   RefreshTokenDto,
   RegisterDto,
+  AccessTokenDto,
 } from "./dtos/auth.dtos";
 import { Auth } from "./entities/auth.entity";
 import { AuthGuard } from "./guards/auth.guard";
@@ -63,7 +64,6 @@ export class AuthController {
     description: "User successfully logged in",
     type: Auth,
   })
-  @ApiResponse({ status: 401, description: "Unauthorized" })
   @ApiResponse({ status: 404, description: "Not Found" })
   @ApiResponse({ status: 400, description: "Bad request" })
   @HttpCode(HttpStatus.OK)
@@ -103,4 +103,20 @@ export class AuthController {
   async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<any> {
     return this.authService.refreshToken(refreshTokenDto);
   }
+
+  @Public()
+  @Post("verify-token")
+  @ApiOperation({ summary: "Verify token" })
+  @ApiBody({ type: AccessTokenDto })
+  @ApiResponse({
+    status: 200,
+    description: "Token is valid",
+  })
+  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 400, description: "Bad request" })
+  @HttpCode(HttpStatus.OK)
+  async verifyToken(@Body() accessTokenDto: AccessTokenDto): Promise<any> {
+    return this.authService.verifyToken(accessTokenDto);
+  }
+
 }

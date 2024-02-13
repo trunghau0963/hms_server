@@ -20,14 +20,14 @@ export class RolesGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    console.log("RolesGuard");
+    // console.log("RolesGuard");
 
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
     if (isPublic) {
-      console.log("isPublic");
+      // console.log("isPublic");
       return true;
     }
 
@@ -38,7 +38,7 @@ export class RolesGuard implements CanActivate {
     if (!requiredRoles) {
       return true;
     }
-    console.log("requiredRoles", requiredRoles);
+    // console.log("requiredRoles", requiredRoles);
     // const { user } = context.switchToHttp().getRequest();
     // console.log("user in role guard", user);
     // console.log(
@@ -49,18 +49,19 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      console.log("!token");
+      // console.log("!token");
       throw new UnauthorizedException();
     }
+    // console.log("token", token);
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.access,
       });
-      console.log("payload", payload);
-      console.log(
-        "user",
-        requiredRoles.some((role) => payload.role?.includes(role)),
-      );
+      // console.log("payload", payload);
+      // console.log(
+      //   "user",
+      //   requiredRoles.some((role) => payload.role?.includes(role)),
+      // );
       request["user"] = payload;
       return requiredRoles.some((role) => payload.role?.includes(role));
     } catch {

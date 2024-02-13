@@ -1,6 +1,7 @@
 import { IsEmail, IsNotEmpty, Matches, MinLength, IsDate } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
 import { AddRecordDto } from "../dtos/record.dtos";
+import { NormalUserEntity } from "src/user/entities/user.entity";
 
 export class PrescriptionEntity {
 
@@ -52,4 +53,7 @@ export class RecordEntity extends AddRecordDto {
 
     @ApiProperty({ example: ServiceIndicatorEntity })
     serviceIndicator: ServiceIndicatorEntity;
+
+    // @ApiProperty({ example : NormalUserEntity})
+    // patient : NormalUserEntity;
 }

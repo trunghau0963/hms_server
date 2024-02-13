@@ -48,10 +48,7 @@ export class ScheduleService {
     }
 
 
-    async deleteSchedule(data: ScheduleDto): Promise<Schedule> {
-        const date = data.date;
-        const time = data.time;
-        const id = data.id;
+    async deleteSchedule(id : string, date : any, time: any): Promise<Schedule> {
 
         const response = this.prismaService.schedule.delete({
             where: {

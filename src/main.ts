@@ -13,7 +13,7 @@ async function bootstrap() {
   app.setGlobalPrefix(configService.get("API_URL"));
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: "http://localhost:3000",
+    origin: "*",
     credentials: true,
   });
   app.use(express.static("."));
@@ -43,7 +43,7 @@ async function bootstrap() {
     },
   });
 
-  await app.listen(5000);
+  await app.listen(8080);
 
   if (module.hot) {
     module.hot.accept();

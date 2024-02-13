@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiResponseProperty, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Appointment, Dentist, Patient, Prescription, Record, Schedule, ServiceIndicator } from '@prisma/client';
@@ -48,15 +48,29 @@ export class ScheduleController {
         return this.scheduleService.addSchedule(data);
     }
 
+    // @Roles(Role.Dentist)
+    // @Delete('delete')
+    // @ApiBody({ type: ScheduleDto })
+    // @ApiOperation({ summary: 'Delete schedule' })
+    // @ApiResponse({ status: 200, description: 'Delete schedule', type: ScheduleDto })
+    // @ApiResponse({ status: 400, description: 'Bad request' })
+    // @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
+    // @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
+    // async deleteSchedule(@Body() data: ScheduleDto): Promise<Schedule> {
+    //     return this.scheduleService.deleteSchedule(data);
+    // }
+
     @Roles(Role.Dentist)
-    @Delete('delete')
-    @ApiBody({ type: ScheduleDto })
+    @Delete('delete/:id/:date/:time')
+    @ApiParam({ name: 'id', required: true, type: String, example: '32zzbq' })
+    @ApiParam({ name: 'date', required: true, type: String, example: '2022-12-12' })
+    @ApiParam({ name: 'time', required: true, type: String, example: '12:00' })
     @ApiOperation({ summary: 'Delete schedule' })
     @ApiResponse({ status: 200, description: 'Delete schedule', type: ScheduleDto })
     @ApiResponse({ status: 400, description: 'Bad request' })
     @ApiResponse({ status: 401, description: 'Unauthorized - Token is invalid or expired' })
     @ApiResponse({ status: 403, description: 'Forbidden resource - Roll is invalid' })
-    async deleteSchedule(@Body() data: ScheduleDto): Promise<Schedule> {
-        return this.scheduleService.deleteSchedule(data);
+    async deleteSchedule(@Req() req: any): Promise<Schedule> {
+        return this.scheduleService.deleteSchedule(req.params.id, req.params.date, req.params.time);
     }
 }

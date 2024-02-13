@@ -66,6 +66,8 @@ export class DrugService {
             }
         });
 
+        console.log(drug.isDelete);
+
         const response = this.prismaService.drug.update({
             where: {
                 idBatch: id

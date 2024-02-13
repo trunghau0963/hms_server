@@ -79,6 +79,12 @@ export class LoginDtoByPhone {
   role: string;
 }
 
+export class AccessTokenDto {
+  @ApiProperty()
+  @IsNotEmpty({ message: "Access token is required" })
+  accessToken: string;
+}
+
 export class RefreshTokenDto {
   @ApiProperty({
     example:

@@ -60,7 +60,7 @@ export class ServiceIndicatorDto {
     quantity: number;
 }
 
-export class DeleteDrugPrecription {
+export class DeleteDrugPrescription {
     @ApiProperty({ example: 'cls1kwo060000ba6n2cwkzx00' })
     idRecord: string;
 

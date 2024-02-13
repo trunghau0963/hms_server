@@ -8,6 +8,11 @@ GET http://localhost:5000/auth/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ODRrYXAiLCJ1c2VybmFtZSI6IkFkbWluMTIzIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzA2ODEwNTY5LCJleHAiOjE3MDY4MTA2Mjl9.KZX52P_82XoUPxqA3dxrJhbv1J8crnQWbcRZ1dkMYlw
 
 ### restApi
+PUT http://localhost:5000/v1/hms/user/changestatus/patient/1e41m4 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ODRrYXAiLCJ1c2VybmFtZSI6IkFkbWluMTIzIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzA3MDQ4NTQ0LCJleHAiOjE3MDcwNTIxNDR9.roG49N9jksZPcVs0bRKAJ1RYqABFABFCljkyqD2qaMk
+
+
+###
 
 POST http://localhost:5000/auth/signup 
 Content-Type: application/json

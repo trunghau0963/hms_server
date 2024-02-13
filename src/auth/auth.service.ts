@@ -10,6 +10,7 @@ import {
   LoginDtoByPhone,
   RegisterDto,
   RefreshTokenDto,
+  AccessTokenDto,
 } from "./dtos/auth.dtos";
 import { hash, compare } from "bcrypt";
 import { PrismaService } from "src/prisma.service";
@@ -391,5 +392,21 @@ export class AuthService {
       newAccessToken,
       newRefreshToken,
     };
+  }
+
+  async verifyToken(data: AccessTokenDto): Promise<any> {
+    const verifyRefreshToken = await this.jwtService.verifyAsync(
+      data.accessToken,
+      {
+        secret: jwtConstants.access,
+      },
+    );
+    if (!verifyRefreshToken) {
+      throw new HttpException(
+        "access token is expired",
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    return verifyRefreshToken;
   }
 }

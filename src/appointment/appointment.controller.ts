@@ -47,13 +47,14 @@ export class AppointmentController {
     }
 
     @Roles(Role.Dentist)
-    @ApiBody({ type: AppointmentDto })
     @ApiOperation({ summary: 'Delete appointment' })
     @ApiResponse({ status: 200, description: 'Delete appointment', type: DeleteAppointmentDto })
     @ApiResponse({ status: 400, description: 'Bad request' })
-    @Delete('delete')
-    async deleteAppointment(@Body() data: any): Promise<any> {
-        console.log('dentist controller')
-        return this.appointmentService.deleteAppointment(data);
+    @Delete('delete/:id/:date/:time')
+    @ApiParam({ name: 'id', required: true, type: String, example: '32zzbq' })
+    @ApiParam({ name: 'date', required: true, type: String, example: '2022-12-12' })
+    @ApiParam({ name: 'time', required: true, type: String, example: '12:00' })
+    async deleteAppointment(@Req() req: any): Promise<any> {
+        return this.appointmentService.deleteAppointment(req.params.id, req.params.date, req.params.time);
     }
 }

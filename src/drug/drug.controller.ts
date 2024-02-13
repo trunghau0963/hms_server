@@ -64,7 +64,7 @@ export class DrugController {
         return this.drugService.addDrug(req.body);
     }
 
-    @ApiBearerAuth('JWT-auth')
+    // @ApiBearerAuth('JWT-auth')
     @Roles(Role.Admin, Role.Staff)
     @Put(':id')
     @ApiOperation({ summary: 'change status drug by id' })

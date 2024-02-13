@@ -63,8 +63,8 @@ export class UserService {
         return response;
     }
 
-    async changStatusUser(id: string, data: ChangeStatus): Promise<any> {
-        if (data.role === 'Patient') {
+    async changStatusUser(id: string, role: string): Promise<any> {
+        if (role === 'patient') {
             const user = await this.prismaService.patient.findUnique({
                 where: {
                     id: id
@@ -80,7 +80,7 @@ export class UserService {
                 }
             });
             return response;
-        } else if (data.role === 'Dentist') {
+        } else if (role === 'dentist') {
             const user = await this.prismaService.dentist.findUnique({
                 where: {
                     id: id
@@ -97,7 +97,7 @@ export class UserService {
             });
             return response;
         }
-        else if (data.role === 'Staff') {
+        else if (role === 'staff') {
             const user = await this.prismaService.staff.findUnique({
                 where: {
                     id: id
@@ -114,7 +114,7 @@ export class UserService {
             });
             return response;
         }
-        else if(data.role === 'Drug'){
+        else if(role === 'drug'){
             const drug = await this.prismaService.drug.findUnique({
                 where: {
                     idBatch: id
