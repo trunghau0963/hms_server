@@ -64,8 +64,9 @@ export class AuthController {
     description: "User successfully logged in",
     type: Auth,
   })
-  @ApiResponse({ status: 404, description: "Not Found" })
   @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiResponse({ status: 401, description: "Unauthorized - User is locked" })
+  @ApiResponse({ status: 404, description: "Not Found" })
   @HttpCode(HttpStatus.OK)
   async signIn(
     @Body(new ValidationPipe()) signInDto: LoginDtoByPhone,
@@ -97,7 +98,7 @@ export class AuthController {
     description: "Refresh token",
     type: Auth,
   })
-  @ApiResponse({ status: 401, description: "Unauthorized" })
+  @ApiResponse({ status: 403, description: "Forbidden" })
   @ApiResponse({ status: 400, description: "Bad request" })
   @HttpCode(HttpStatus.OK)
   async refreshToken(@Body() refreshTokenDto: RefreshTokenDto): Promise<any> {

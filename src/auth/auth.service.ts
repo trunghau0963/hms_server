@@ -104,6 +104,13 @@ export class AuthService {
       );
     }
 
+    if(user.islock){
+      throw new HttpException(
+        { message: "Account is locked." },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
     const verify = await compare(data.password, user?.password);
     if (!verify) {
       throw new HttpException(
@@ -325,7 +332,7 @@ export class AuthService {
     let user;
     if (role === Role.Patient) {
       console.log("patient");
-      user = await this.prismaService.patient.findFirstOrThrow({
+      user = await this.prismaService.patient.findFirst({
         where: {
           refreshToken: data.refreshToken,
         },
@@ -353,10 +360,19 @@ export class AuthService {
       });
     }
 
+    console.log("user", user);
+
     if (!user) {
       throw new HttpException(
         "Refresh token is not valid",
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if(user.islock){
+      throw new HttpException(
+        { message: "Account is locked." },
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -370,7 +386,7 @@ export class AuthService {
     if (!verifyRefreshToken) {
       throw new HttpException(
         "Refresh token is expired",
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.FORBIDDEN,
       );
     }
 
